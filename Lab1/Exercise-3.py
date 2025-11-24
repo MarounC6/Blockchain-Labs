@@ -19,7 +19,7 @@ def feistel_round(left, right, key):
     return new_left, new_right
 
 # Encryption function
-def feistel_encrypt(plain_text, rounds=2):
+def DES_encrypt(plain_text, rounds=2):
     length = 64  # Fixed block size of 64 bits and key size of 64 bits
 
     main_key = rand_key(length)
@@ -28,6 +28,28 @@ def feistel_encrypt(plain_text, rounds=2):
 
     # Convert plaintext to binary (8 bits for each character)
     pt_bin = "".join(format(ord(c), "08b") for c in plain_text)
+
+    initial_perm = [58, 50, 42, 34, 26, 18, 10, 2,
+                    60, 52, 44, 36, 28, 20, 12, 4,
+                    62, 54, 46, 38, 30, 22, 14, 6,
+                    64, 56, 48, 40, 32, 24, 16, 8,
+                    57, 49, 41, 33, 25, 17, 9, 1,
+                    59, 51, 43, 35, 27, 19, 11, 3,
+                    61, 53, 45, 37, 29, 21, 13, 5,
+                    63, 55, 47, 39, 31, 23, 15, 7]
+    
+    # Apply initial permutation
+    # Apply initial permutation
+    permutated_bin = ['0'] * len(initial_perm)
+    for i in range(len(initial_perm)):
+        permutated_bin[i] = pt_bin[initial_perm[i] - 1]
+    pt_bin = "".join(permutated_bin)
+
+
+
+
+
+
 
     # Split into two halves
     n = len(pt_bin) // 2
@@ -77,7 +99,7 @@ def feistel_decrypt(cipher_text, keys):
 
 # Driver Code
 if __name__ == "__main__":
-    plaintext = "Hello"
+    plaintext = "Helloooo"
     print("Plain Text:", plaintext)
 
     # Encryption
