@@ -66,16 +66,3 @@ def feistel_decrypt(cipher_text, key, rounds):
         plain_text += chr(int(byte, 2))
 
     return plain_text
-
-# Driver Code
-if __name__ == "__main__":
-    plaintext = "Hello"
-    print("Plain Text:", plaintext)
-
-    # Encryption
-    cipher, round_keys, rounds = feistel_encrypt(plaintext, rounds=16)
-    print("Cipher Text:", cipher)
-
-    # Decryption
-    recovered = feistel_decrypt(cipher, round_keys, rounds)
-    print("Decrypted Text:", recovered)
