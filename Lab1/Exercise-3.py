@@ -20,6 +20,12 @@ def feistel_round(left, right, key):
 
 # Encryption function
 def feistel_encrypt(plain_text, rounds=2):
+    length = 64  # Fixed block size of 64 bits and key size of 64 bits
+
+    main_key = rand_key(length)
+    # Skip every 8th bit to create effective key (removes parity bits)
+    effective_key = "".join(main_key[i] for i in range(len(main_key)) if (i + 1) % 8 != 0)
+
     # Convert plaintext to binary (8 bits for each character)
     pt_bin = "".join(format(ord(c), "08b") for c in plain_text)
 
