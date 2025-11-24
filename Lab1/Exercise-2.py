@@ -27,11 +27,13 @@ def feistel_encrypt(plain_text, rounds=2):
     n = len(pt_bin) // 2
     left, right = pt_bin[:n], pt_bin[n:]
 
-    key = rand_key(len(right)) # we generate the key inside of the function, so each encryption will get a different key
+    # Generate random round keys
+    keys = [rand_key(len(right)) for _ in range(rounds)]
 
     # Apply Feistel rounds
     for i in range(rounds):
-        left, right = feistel_round(left, right, key)
+        left, right = feistel_round(left, right, keys[i])
+
     # Final ciphertext in binary
     cipher_bin = left + right
 
@@ -41,10 +43,10 @@ def feistel_encrypt(plain_text, rounds=2):
         byte = cipher_bin[i:i+8]
         cipher_text += chr(int(byte, 2))
 
-    return cipher_text, key, rounds
+    return cipher_text, keys
 
 # Decryption function
-def feistel_decrypt(cipher_text, key, rounds):
+def feistel_decrypt(cipher_text, keys):
     # Convert ciphertext to binary
     ct_bin = "".join(format(ord(c), "08b") for c in cipher_text)
 
@@ -53,8 +55,8 @@ def feistel_decrypt(cipher_text, key, rounds):
     left, right = ct_bin[:n], ct_bin[n:]
 
     # Apply Feistel rounds in reverse
-    for i in range(rounds):
-        right, left = feistel_round(right, left, key)
+    for i in reversed(range(len(keys))):
+        right, left = feistel_round(right, left, keys[i])
 
     # Final plaintext in binary
     plain_bin = left + right
@@ -73,9 +75,9 @@ if __name__ == "__main__":
     print("Plain Text:", plaintext)
 
     # Encryption
-    cipher, round_keys, rounds = feistel_encrypt(plaintext, rounds=16)
+    cipher, round_keys = feistel_encrypt(plaintext)
     print("Cipher Text:", cipher)
 
     # Decryption
-    recovered = feistel_decrypt(cipher, round_keys, rounds)
+    recovered = feistel_decrypt(cipher, round_keys)
     print("Decrypted Text:", recovered)
