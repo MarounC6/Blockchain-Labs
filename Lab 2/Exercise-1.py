@@ -1,4 +1,5 @@
 import random
+import math
 
 def is_prime(n):
     if n <= 1:
@@ -9,10 +10,10 @@ def is_prime(n):
     return True
 
 def generate_prime():
-    while True:
-        prime = random.randint(2 ** 8, 2 ** 16)
-        if is_prime(prime):
-            return prime
+    prime = random.randrange(2 ** 8 + 1, 2 ** 16, 2)  # odd numbers only
+    while not is_prime(prime):
+        prime = random.randrange(2 ** 8 + 1, 2 ** 16, 2)
+    return prime
 
 def generate_keypair():
     p = generate_prime()
@@ -20,10 +21,10 @@ def generate_keypair():
     n = p * q
     phi = (p - 1) * (q - 1)
 
-    while True:
-        e = random.randint(2, phi)
-        if math.gcd(e, phi) == 1:
-            break
+    # Choose public exponent e such that gcd(e, phi) = 1
+    e = random.randint(2, phi - 1)
+    while math.gcd(e, phi) != 1:
+        e = random.randint(2, phi - 1)
 
-    d = pow(e, -1, phi)
+    d = pow(e, -1, phi) # d=e^-1 mod phi
     return ((n, e), (n, d))
