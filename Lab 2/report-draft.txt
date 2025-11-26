@@ -16,3 +16,7 @@ to find the public key e because it provides better
      search both secure and efficient. This approach balances
       cryptographic strength with computational practicality,
        ensuring that RSA keys remain resistant to pattern-based attacks.
+
+
+
+Because rsa works inly with integers, to encrypt a msg, we convert each character to its unicode
