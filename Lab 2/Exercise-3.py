@@ -10,4 +10,21 @@ def decrypt(encrypted_message, private_key):
 
 # Example usage:
 if __name__ == "__main__":
+    print("=== RSA Decryption ===")
     
+    # Get private key from user
+    d = int(input("Please enter your private key d: "))
+    n = int(input("Please enter your modulus n: "))
+    private_key = (n, d)
+    
+    # Get encrypted message
+    print("\nPlease enter the encrypted message (as a list of numbers):")
+    print("Format: [num1, num2, num3, ...]")
+    encrypted_input = input("Encrypted message: ")
+    
+    # Parse the encrypted message
+    encrypted_msg = eval(encrypted_input)
+    
+    # Decrypt the message
+    decrypted_msg = decrypt(encrypted_msg, private_key)
+    print("\nDecrypted message:", decrypted_msg)
