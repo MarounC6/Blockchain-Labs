@@ -9,15 +9,14 @@ def is_prime(n):
             return False
     return True
 
-def generate_prime():
-    prime = random.randrange(2 ** 8 + 1, 2 ** 16, 2)  # odd numbers only
-    while not is_prime(prime):
-        prime = random.randrange(2 ** 8 + 1, 2 ** 16, 2)
-    return prime
 
 def generate_keypair():
-    p = generate_prime()
-    q = generate_prime()
+    p = 7919
+    q = 1009
+
+    if p == q or not is_prime(p) or not is_prime(q):
+        raise ValueError("Both numbers must be distinct primes.")
+
     n = p * q
     phi = (p - 1) * (q - 1)
 
@@ -33,10 +32,28 @@ def generate_keypair():
 
 def encrypt(message, public_key):
     n, e = public_key
-    encrypted_message = [pow(ord(char), e, n) for char in message]
+
+    """ Convert the message to Unicode integers and encrypt each character """
+    message_unicode = [ord(char) for char in message]
+
+    encrypted_message = [pow(charUni, e, n) for charUni in message_unicode] # C = M^e mod n
     return encrypted_message
 
 def decrypt(encrypted_message, private_key):
     n, d = private_key
-    decrypted_message = ''.join([chr(pow(char, d, n)) for char in encrypted_message])
+    decrypted_message_Uni = [pow(charUni, d, n) for charUni in encrypted_message] # M = C^d mod n
+
+    """ Convert Unicode integers back to characters """
+    decrypted_message = ''.join([chr(charUni) for charUni in decrypted_message_Uni])
     return decrypted_message
+
+
+# Example usage:
+if __name__ == "__main__":
+    public_key, private_key = generate_keypair()
+    message = "Hello, RSA!"
+    print("Original message:", message)
+    encrypted_msg = encrypt(message, public_key)
+    print("Encrypted message:", encrypted_msg)
+    decrypted_msg = decrypt(encrypted_msg, private_key)
+    print("Decrypted message:", decrypted_msg)

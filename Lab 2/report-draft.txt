@@ -19,4 +19,6 @@ to find the public key e because it provides better
 
 
 
-Because rsa works inly with integers, to encrypt a msg, we convert each character to its unicode
+Because rsa works inly with integers, to encrypt a msg, we convert each character to its unicode.
+
+In ex 2, 
