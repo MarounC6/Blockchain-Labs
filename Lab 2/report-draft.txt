@@ -21,4 +21,4 @@ to find the public key e because it provides better
 
 Because rsa works inly with integers, to encrypt a msg, we convert each character to its unicode.
 
-In ex 2, 
+In ex 2, we need two prime numbers of 512 bit to get a key of 1024 buts ...

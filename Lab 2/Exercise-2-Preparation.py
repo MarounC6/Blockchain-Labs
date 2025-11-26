@@ -37,26 +37,9 @@ def generate_prime(bits):
         if is_probable_prime(p):
             return p
 
-def generate_keypair(bits=1024, e=65537):
-    if bits < 16 or bits % 2 != 0:
-        raise ValueError("bits should be an even integer >= 16")
-    half = bits // 2
-    while True:
-        p = generate_prime(half)
-        q = generate_prime(half)
-        print("Generated primes p and q:", p, q)
-        if p == q:
-            continue
-        n = p * q
-        phi = (p - 1) * (q - 1)
-        if math.gcd(e, phi) == 1:
-            d = pow(e, -1, phi)
-            return ((n, e), (n, d))
-
 if __name__ == "__main__":
-    public, private = generate_keypair(1024)
-    n, e = public
-    _, d = private
-    print("n bit length:", n.bit_length())
-    print("public exponent (e):", e)
-    print("private exponent (d) (first 64 bits):", hex(d)[:18], "...")
+    p = generate_prime(512)
+    q = generate_prime(512)
+    print("Generated primes p and q:")
+    print("p =", p)
+    print("q =", q)
