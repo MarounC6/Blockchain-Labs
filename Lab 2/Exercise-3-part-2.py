@@ -1,11 +1,32 @@
 """ This code lets us decrypt a list of characters using my private key. The message was encrypted using my public key."""
 
-def decrypt(encrypted_message, my_private_key):
-    n, d = my_private_key
-    decrypted_message_Uni = [pow(charUni, d, n) for charUni in encrypted_message] # M = C^d mod n
+def decrypt(encrypted_message, private_key):
+    """Decrypt a list of integers to a string.
 
-    """ Convert Unicode integers back to characters """
-    decrypted_message = ''.join([chr(charUni) for charUni in decrypted_message_Uni])
+    Handles the case where the decrypted integer is larger than a single
+    Unicode code point by converting the integer to bytes and decoding.
+    This prevents OverflowError when `chr()` can't accept very large ints.
+    """
+    n, d = private_key
+    parts = []
+    for char in encrypted_message:
+        m = pow(char, d, n)
+        try:
+            parts.append(chr(m))
+        except (OverflowError, ValueError):
+            # Convert integer to minimal big-endian byte sequence
+            length = (m.bit_length() + 7) // 8
+            if length == 0:
+                parts.append('')
+                continue
+            b = m.to_bytes(length, byteorder='big')
+            # Try UTF-8 first, fall back to latin-1 to preserve bytes
+            try:
+                parts.append(b.decode('utf-8'))
+            except UnicodeDecodeError:
+                parts.append(b.decode('latin-1'))
+
+    decrypted_message = ''.join(parts)
     return decrypted_message
 
 # Example usage:
