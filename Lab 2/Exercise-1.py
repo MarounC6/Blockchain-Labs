@@ -28,3 +28,15 @@ def generate_keypair():
 
     d = pow(e, -1, phi) # d=e^-1 mod phi
     return ((n, e), (n, d))
+
+
+
+def encrypt(message, public_key):
+    n, e = public_key
+    encrypted_message = [pow(ord(char), e, n) for char in message]
+    return encrypted_message
+
+def decrypt(encrypted_message, private_key):
+    n, d = private_key
+    decrypted_message = ''.join([chr(pow(char, d, n)) for char in encrypted_message])
+    return decrypted_message
