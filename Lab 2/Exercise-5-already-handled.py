@@ -55,7 +55,7 @@ if __name__ == "__main__":
     public_key, private_key = generate_keypair()
     print("Public Key (n, e):", public_key)
     print("Private Key (n, d):", private_key)
-    message = "Hello, RSA!"
+    message = "Hello, RSA!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
     print("Original message:", message)
     encrypted_msg = encrypt(message, public_key)
     print("Encrypted message:", encrypted_msg)
