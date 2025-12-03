@@ -22,3 +22,12 @@ to find the public key e because it provides better
 Because rsa works inly with integers, to encrypt a msg, we convert each character to its unicode.
 
 In ex 2, we need two prime numbers of 512 bit to get a key of 1024 buts ...
+
+ex 3 -4
+
+We shoudl create once the key pair and use them each time becuase the e is generated using randomness
+Therefore we might not get the same key pair each time
+ex4
+
+    print("\nStep 1: Decrypt using my private key to get the message signed by recipient.")
+    print("Note: We should do the steps in this order because when a person sends a message, they first sign it with their private key and then encrypt it with the recipient's public key.")

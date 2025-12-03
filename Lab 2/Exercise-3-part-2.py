@@ -32,6 +32,7 @@ def decrypt(encrypted_message, private_key):
 # Example usage:
 if __name__ == "__main__":
     print("=== RSA Decryption ===")
+    print("Someone sent you an encrypted message using your public key.")
     
     # Get private key from user
     d = int(input("Please enter your private key d: "))
