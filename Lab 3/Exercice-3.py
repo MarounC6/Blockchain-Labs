@@ -1,3 +1,6 @@
+# import necessary modules to time the function
+import time
+
 # --- SHA-512 CONSTANTS ---
 
 # Modulo mask for 64-bit operations (2^64)
@@ -172,22 +175,87 @@ def sha512_hash(data: bytes) -> str:
 
 #Exercice 3 :
 
-def concatenate_bytes(id, x):
-    """Concatenates two strings"""
+""" def concatenate_bytes(id, x):
+    Concatenates two strings"
     result = b''
     result += id
     result += x
     return result
+ """
 
-id = b'random'
+def concatenate_bytes(id, nonce):
+    """Concatenates id and a fixed-width nonce (x: int -> bytes)."""
+    # x is now an integer nonce; encode to fixed-width bytes (8 bytes here)
+    return id + nonce.to_bytes(8, byteorder='big')
 
-x = b''     
+def time_to_find_leading_zero(num_zeros=1):
+    """Finds a value x such that sha512_hash(id || x) starts with num_zeros '0's"""
+    id = b'random'
+    nonce = 0#x = b''
+    target = '0' * num_zeros     
+    time_start = time.time()
 
-while True:
-    h = sha512_hash(concatenate_bytes(id, x))   # compute once
-    if h.startswith('0'):         # found a hash with leading '0'
-        break
-    print(h)                      # optional: show attempts
-    x += b'0'                     # try next candidate
+    while True:    
+        
+        #nonce_bytes = nonce.to_bytes(8, byteorder='big')
+        h = sha512_hash(concatenate_bytes(id, nonce))   # compute once
+        if h.startswith(target):         # found a hash with leading '0's
+            time_end = time.time()
+            break
+        #print(h)                      # optional: show attempts
+        nonce += 1
+        if time.time() - time_start > 600:  # avoid long runs in testing:
+            time_end = time.time()
+            print(f'Timeout reached after {round(time_end - time_start, 2)} seconds. No value found.\n\n')
+            return round(time_end - time_start, 2)
+        if nonce >= 1 << (8 * 8):  # 8 bytes nonce space
+            raise OverflowError("Nonce space exhausted; increase nonce_width or use extra-nonce")                     # try next candidate
 
-print(f'Valeur de x trouvée : {x}, hash: {h}')
+    print(f'Valeur de x trouvée : {nonce}, hash: {h}, temps écoulé: {round(time_end - time_start, 2)} secondes\n\n')
+    return round(time_end - time_start, 2)
+
+""" for i in range(1, 7):
+    print(f'--- Recherche pour {i} zéros initiaux ---')
+    time_to_find_leading_zero(i) """
+
+
+# need to store the time taken for each number of leading zeros and make a small analysis of the results and a graphic representation (e.g., using matplotlib)
+data = []
+for i in range(1, 10):
+    print(f'--- Recherche pour {i} zéros initiaux ---')
+    time_values = time_to_find_leading_zero(i)
+    data.append((i, time_values))
+
+# need to store the values in a csv file
+import csv
+
+# Store data
+with open('sha512_leading_zeros_results.csv', mode='w', newline='') as file:
+    writer = csv.writer(file)
+    writer.writerow(['Leading Zeros', 'Time (seconds)'])
+    for row in data:
+        writer.writerow(row)
+
+# Extract data with error handling
+leading_zeros = []
+times = []
+
+try:
+    with open('sha512_leading_zeros_results.csv', mode='r') as file:
+        reader = csv.DictReader(file)  # Use DictReader for named columns
+        for row in reader:
+            leading_zeros.append(int(row['Leading Zeros']))
+            times.append(float(row['Time (seconds)']))
+except FileNotFoundError:
+    print("CSV file not found. Run the data collection first.")
+
+#Pltotting the results
+import matplotlib.pyplot as plt
+plt.figure(figsize=(10, 6))
+plt.plot(leading_zeros, times, marker='o')
+plt.title('Time to Find SHA-512 Hash with Leading Zeros')
+plt.xlabel('Number of Leading Zeros')
+plt.ylabel('Time (seconds)')
+plt.yscale('log')  # Logarithmic scale for better visualization
+plt.grid(True, which="both", ls="--")
+plt.show()
