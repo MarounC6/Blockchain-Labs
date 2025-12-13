@@ -173,7 +173,7 @@ def sha512_hash(data: bytes) -> str:
         
     return final_hash.hex()
 
-#Exercice 3 :
+#Exercise 3 :
 
 """ def concatenate_bytes(id, x):
     Concatenates two strings"
@@ -218,7 +218,7 @@ def time_to_find_leading_zero(num_zeros=1):
     print(f'--- Recherche pour {i} zéros initiaux ---')
     time_to_find_leading_zero(i) """
 
-
+#Exercise 4 :
 # need to store the time taken for each number of leading zeros and make a small analysis of the results and a graphic representation (e.g., using matplotlib)
 data = []
 for i in range(1, 10):
